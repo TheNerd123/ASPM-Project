@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security Dashboard | ASPM</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="dashboard" data-title="Security Dashboard">
+  <main id="content">
+    <div class="page-head">
+      <div>
+        <h1>Security Dashboard</h1>
+        <p class="muted">Monitor application security, scan activity, and vulnerabilities in one place.</p>
+      </div>
+      <div class="actions">
+        <button class="btn">Export report</button>
+        <a class="btn primary" href="scans.html">+ New scan</a>
+      </div>
+    </div>
+
+    <div class="filters">
+      <label>Application <select><option>All applications</option></select></label>
+      <label>Scanner <select><option>All scanners</option></select></label>
+      <label>Date range <select><option>Last 30 days</option></select></label>
+    </div>
+
+    <!-- Placeholder numbers: replaced with real data in Sprint 7 (Stories 7.1-7.6) -->
+    <section class="grid-stats">
+      <div class="card stat"><span>Total applications</span><b>48</b><small>46 active &middot; 2 archived</small></div>
+      <div class="card stat"><span>Open findings</span><b>248</b><small>18 fewer than prior period</small></div>
+      <div class="card stat"><span>Critical</span><b class="critical">12</b><small>4 applications affected</small></div>
+      <div class="card stat"><span>High</span><b class="high">36</b><small>12 applications affected</small></div>
+      <div class="card stat"><span>Medium</span><b class="medium">84</b><small>23 applications affected</small></div>
+      <div class="card stat"><span>Low</span><b class="low">116</b><small>31 applications affected</small></div>
+    </section>
+
+    <section class="card">
+      <h2>Recent scans</h2>
+      <table>
+        <thead><tr><th>Application</th><th>Scanner</th><th>Status</th><th>Findings</th><th>Started</th></tr></thead>
+        <tbody>
+          <tr><td>Payments API</td><td>Semgrep</td><td><span class="badge completed">Completed</span></td><td>18</td><td>10:42 AM</td></tr>
+          <tr><td>Customer Portal</td><td>Semgrep</td><td><span class="badge running">Running</span></td><td>&mdash;</td><td>10:38 AM</td></tr>
+          <tr><td>Analytics API</td><td>Semgrep</td><td><span class="badge queued">Queued</span></td><td>&mdash;</td><td>10:24 AM</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+</body>
+</html>
