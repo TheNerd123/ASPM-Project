@@ -39,3 +39,67 @@ The initial API will support:
 ## Sprint 1 Note
 
 This is the initial database and API design. The database implementation and connections can be expanded in later sprints.
+
+
+## Initial Entity Fields
+
+### User
+- user_id
+- name
+- email
+- password
+- role
+
+### Application
+- application_id
+- name
+- repository_url
+- owner
+- status
+
+### Scanner
+- scanner_id
+- name
+- type
+- status
+
+### Scanning Client
+- client_id
+- name
+- status
+
+### Scan
+- scan_id
+- application_id
+- scanner_id
+- client_id
+- status
+- started_at
+- completed_at
+
+### Finding
+- finding_id
+- scan_id
+- title
+- severity
+- status
+- description
+
+### Report
+- report_id
+- generated_by
+- report_type
+- format
+- generated_at
+
+- ## Example API Endpoints
+
+- POST /api/login
+- GET /api/applications
+- POST /api/applications
+- GET /api/scanners
+- POST /api/scans
+- GET /api/scans
+- GET /api/findings
+- GET /api/reports
+- POST /api/reports
