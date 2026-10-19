@@ -4,3 +4,6 @@ Members:
 Flynn Curtis,
 Michael Wingo,
 Chris Chambers
+Richard Chao
+Shirzad Osmani
+Abdullah Mumtaz
