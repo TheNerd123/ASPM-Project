@@ -1,5 +1,7 @@
+
 package com.teamvoid.aspm.domain;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class User {
@@ -10,6 +12,8 @@ public class User {
     private String passwordHash;
     private String role;
     private String status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public User() {
     }
@@ -22,6 +26,14 @@ public class User {
         this.passwordHash = passwordHash;
         this.role = role;
         this.status = status;
+    }
+
+    public User(UUID id, String name, String email,
+                String passwordHash, String role, String status,
+                LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this(id, name, email, passwordHash, role, status);
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -70,5 +82,21 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
