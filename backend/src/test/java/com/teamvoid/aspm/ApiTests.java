@@ -1,3 +1,4 @@
+
 package com.teamvoid.aspm;
 
 import org.junit.jupiter.api.Test;
@@ -32,10 +33,12 @@ class ApiTests {
     void initialPlatformResourcesAreAvailable() throws Exception {
         mockMvc.perform(get("/api/applications"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", greaterThanOrEqualTo(1)));
+                .andExpect(jsonPath("$.length()", greaterThanOrEqualTo(1)));
+
         mockMvc.perform(get("/api/scanners"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name", is("Semgrep")));
+
         mockMvc.perform(get("/api/dashboard/summary"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalApplications", greaterThanOrEqualTo(1)));
