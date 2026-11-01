@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | ASPM</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  <div class="login-page">
+
+    <!-- Left: brand panel -->
+    <aside class="brand">
+      <div class="brand-logo">
+        <span class="logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </span>
+        ASPM
+      </div>
+
+      <p class="eyebrow">APPLICATION SECURITY, CONNECTED</p>
+
+      <div class="brand-copy">
+        <h2>One clear view.<br>A stronger security posture.</h2>
+        <p>Bring your applications, scanners, and findings together. Give every team the context to act with confidence.</p>
+      </div>
+
+      <div class="ecosystem" aria-hidden="true">
+        <div class="eco-head">
+          <strong>Your security ecosystem</strong>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-4h12v4"/></svg>
+        </div>
+        <div class="eco-tiles">
+          <div class="tile"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/></svg>Applications</div>
+          <div class="tile"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5h4M16 5h4v4M20 15v4h-4M8 19H4v-4M8 12h8"/></svg>Scanners</div>
+          <div class="tile"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="7" rx="2"/></svg>Clients</div>
+        </div>
+        <svg class="eco-lines" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M16.67 0V18H83.33V0M50 0V40" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>
+        <div class="unified">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div><strong>Unified security posture</strong><small>Visibility &rarr; Prioritization &rarr; Action</small></div>
+        </div>
+        <p class="eco-caption">Connected tools. Shared context. Confident decisions.</p>
+      </div>
+
+      <p class="brand-foot">Built for security and development teams.</p>
+    </aside>
+
+    <!-- Right: sign-in form -->
+    <main class="panel">
+      <div class="panel-top">Need access? <a href="#" id="contact-admin">Contact your administrator</a></div>
+
+      <div class="form-wrap">
+        <span class="lock-tile" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/><circle cx="12" cy="16" r="1"/></svg>
+        </span>
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to your Aegis security workspace.</p>
+
+        <form id="login-form" novalidate>
+          <div id="form-message" class="message" role="alert" aria-live="polite" hidden></div>
+
+          <div class="field">
+            <label for="identifier">Username/email</label>
+            <div class="input-wrap">
+              <input id="identifier" name="identifier" type="text" autocomplete="username" placeholder="you@company.com" autofocus>
+              <svg class="input-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            </div>
+            <p class="field-error" id="identifier-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password">
+              <button type="button" class="eye" id="toggle-password" aria-label="Show password" aria-pressed="false">
+                <svg id="eye-off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 6.1A9.8 9.8 0 0112 6c5 0 8.5 4.2 9.5 6a12 12 0 01-2.7 3.3M6.6 6.7A12.3 12.3 0 002.5 12c1 1.8 4.5 6 9.5 6 1.6 0 3-.4 4.2-1M9.9 9.9a3 3 0 004.2 4.2"/></svg>
+                <svg id="eye-on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M2.5 12C3.5 10.2 7 6 12 6s8.5 4.2 9.5 6c-1 1.8-4.5 6-9.5 6s-8.5-4.2-9.5-6z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <p class="field-error" id="password-error" hidden></p>
+          </div>
+
+          <div class="row">
+            <label class="remember"><input type="checkbox" id="remember"> Remember me</label>
+            <a href="#" id="forgot">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-signin" id="signin">Sign In</button>
+        </form>
+
+        <p class="protected">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          <span>Protected access. Your session is encrypted and monitored to keep your workspace secure.</span>
+        </p>
+      </div>
+
+      <footer class="panel-foot">
+        <span>&copy; 2026 ASPM Security</span>
+        <span><a href="#">Privacy policy</a> &middot; <a href="#">Terms of service</a></span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
