@@ -1,4 +1,3 @@
-
 const searchInput = document.getElementById("user-search");
 const userTable = document.querySelector("tbody");
 
@@ -62,8 +61,38 @@ addUserButton.addEventListener("click", function () {
 // Close the form when Cancel is clicked.
 cancelUserButton.addEventListener("click", closeForm);
 
-// Handle clicks on Edit buttons.
+// Handle clicks on Edit or remove buttons.
 userTable.addEventListener("click", function (event) {
+
+  // Check whether a Remove button was clicked.
+  const removeButton = event.target.closest(".remove-user-btn");
+
+  if (removeButton) {
+    const row = removeButton.closest("tr");
+    const name = row.cells[0].textContent.trim();
+
+    // Ask for confirmation before removing.
+    const confirmed = window.confirm(
+      `Are you sure you want to remove ${name}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    // If this user was being edited, close the form.
+    if (editingRow === row) {
+      closeForm();
+    }
+
+    // Remove the selected row.
+    row.remove();
+
+    // Reapply the current search.
+    filterUsers();
+    return;
+  }
+
   const editButton = event.target.closest(".edit-user-btn");
 
   if (!editButton) {
@@ -129,15 +158,25 @@ userForm.addEventListener("submit", function (event) {
     newRow.insertCell().textContent = role;
     newRow.insertCell().textContent = "Active";
 
-    // Give the new user an Edit button.
     const actionsCell = newRow.insertCell();
 
+    // Create Edit button
     const editButton = document.createElement("button");
     editButton.type = "button";
     editButton.className = "btn edit-user-btn";
     editButton.textContent = "Edit";
 
+    // Create Remove button
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "btn remove-user-btn";
+    removeButton.textContent = "Remove";
+
+    // Add both buttons to the new row
     actionsCell.appendChild(editButton);
+    actionsCell.append(" ");
+    actionsCell.appendChild(removeButton);
+
     userTable.appendChild(newRow);
   }
 

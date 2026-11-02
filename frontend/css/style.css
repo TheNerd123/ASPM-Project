@@ -148,3 +148,14 @@ td { padding: 12px; border-top: 1px solid var(--border); }
   color: var(--critical);
 }
 
+/* User Management remove buttons */
+.remove-user-btn {
+  color: var(--critical);
+  border-color: var(--critical);
+}
+
+.remove-user-btn:hover {
+  background: #fbe6e8;
+}
+
+
