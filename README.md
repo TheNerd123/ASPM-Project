@@ -21,6 +21,11 @@ docker compose logs backend
 The backend should be available at http://localhost:8080. Check its health with:  
 curl http://localhost:8080/actuator/health
 
+The local database is seeded with a development administrator account so the login page can be tested:
+`admin@example.com` / `password123`. The password is stored as a BCrypt hash. Set
+`APP_SEED_DEFAULT_USER=false` and provide `APP_DEFAULT_PASSWORD` through a secure deployment
+configuration when running outside local development.
+
 To serve the static frontend, open a second Terminal window and run:  
 python3 -m http.server 5500
 

@@ -18,6 +18,12 @@ server:
 app:
   cors:
     allowed-origins: ${ASPM_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5500,http://127.0.0.1:5500}
+  auth:
+    # Local/demo default. Set APP_SEED_DEFAULT_USER=false and provide users through
+    # the user-management work before deploying outside the development environment.
+    seed-default-user: ${APP_SEED_DEFAULT_USER:true}
+    default-email: ${APP_DEFAULT_EMAIL:admin@example.com}
+    default-password: ${APP_DEFAULT_PASSWORD:password123}
 
 management:
   endpoints:

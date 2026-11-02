@@ -1,6 +1,7 @@
 package com.teamvoid.aspm.api;
 
 import com.teamvoid.aspm.service.ResourceNotFoundException;
+import com.teamvoid.aspm.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -23,6 +24,16 @@ public class ApiExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         return problem(HttpStatus.BAD_REQUEST, "Validation failed", detail);
+    }
+
+    @ExceptionHandler(AuthenticationService.InvalidCredentialsException.class)
+    public ProblemDetail unauthorized(AuthenticationService.InvalidCredentialsException exception) {
+        return problem(HttpStatus.UNAUTHORIZED, "Authentication failed", exception.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ProblemDetail badRequest(IllegalArgumentException exception) {
+        return problem(HttpStatus.BAD_REQUEST, "Invalid request", exception.getMessage());
     }
 
     private ProblemDetail problem(HttpStatus status, String title, String detail) {
