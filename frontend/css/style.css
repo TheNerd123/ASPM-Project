@@ -108,3 +108,43 @@ td { padding: 12px; border-top: 1px solid var(--border); }
 .empty { text-align: center; padding: 48px 16px; color: var(--muted); }
 
 @media (max-width: 800px) { .sidebar { display: none; } }
+
+
+
+/* ---------- User Management ---------- */
+.user-form-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.user-form-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.user-form-fields input,
+.user-form-fields select,
+#user-search {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  font: inherit;
+}
+
+.user-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#user-form-error {
+  color: var(--critical);
+}
+
