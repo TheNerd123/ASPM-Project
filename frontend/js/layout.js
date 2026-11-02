@@ -8,6 +8,7 @@
     { id: "scans",        label: "Scans",        href: "scans.html" },
     { id: "findings",     label: "Findings",     href: "findings.html" },
     { id: "reports",      label: "Reports",      href: "reports.html" },
+    { id: "users",        label: "User Management", href: "users.html" },
     { id: "logout",       label: "Logout",       href: "logout.html" }
   ];
 
