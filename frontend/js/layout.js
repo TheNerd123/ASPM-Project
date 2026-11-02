@@ -7,7 +7,8 @@
     { id: "scanners",     label: "Scanners",     href: "scanners.html" },
     { id: "scans",        label: "Scans",        href: "scans.html" },
     { id: "findings",     label: "Findings",     href: "findings.html" },
-    { id: "reports",      label: "Reports",      href: "reports.html" }
+    { id: "reports",      label: "Reports",      href: "reports.html" },
+    { id: "logout",       label: "Logout",       href: "logout.html" }
   ];
 
   const page = document.body.dataset.page;
@@ -40,9 +41,40 @@
       <header class="topbar">
         <div>Workspace &gt; <strong>${title}</strong></div>
         <div class="user">
-          <span class="avatar">JD</span>
+          <span class="avatar" onclick = "toggleMenu()">JD</span>
           <div><strong>John Doe</strong><small>Security administrator</small></div>
         </div>
+
+      <div class = "sub-menu-wrap" id = "subMenu">
+        <div class = "sub-menu">
+          <div class = "user-info">
+            <img src = "images/Default_Profile_Picture.png">
+            <h3>John Doe</h3>
+            <hr>
+            <a href = "#" class = "sub-menu-link">
+              <p>Profile<p>
+              <span>></span>
+            </a>
+            <a href = "#" class = "sub-menu-link">
+              <p>Settings<p>
+              <span>></span>
+            </a>
+            <a href = "#" class = "sub-menu-link">
+              <p>Logout<p>
+              <span>></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+  <script>
+  let subMenu = document.getElementById("subMenu");
+
+  function toggleMenu() {
+    subMenu.classList.toggle("open-menu");
+  }
+  </script>
+
       </header>
     </div>`;
 
@@ -57,3 +89,12 @@
     .then(() => { dot.className = "dot up"; text.textContent = "Platform operational"; })
     .catch(() => { dot.className = "dot down"; text.textContent = "Backend unreachable"; });
 })();
+
+//For hiding and revealing menu when clicking on user image.
+/*
+let subMenu = document.getElementById("subMenu");
+
+function toggleMenu() {
+  subMenu.classList.toggle("open-menu");
+}
+*/
