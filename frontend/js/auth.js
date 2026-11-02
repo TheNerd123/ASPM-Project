@@ -44,15 +44,6 @@ const Auth = (() => {
   async function login(identifier, password) {
     const cfg = window.ASPM_CONFIG;
 
-    // Development only: lets the page be built before the login API (Story 2.2) exists.
-    if (cfg.USE_MOCK_LOGIN) {
-      await new Promise(r => setTimeout(r, 400));
-      if (identifier === "admin@example.com" && password === "password123") {
-        return { ok: true, token: "mock-token", user: { name: "Mock Admin", email: identifier, role: "ADMIN" } };
-      }
-      return { ok: false, reason: "invalid", message: "Incorrect username/email or password." };
-    }
-
     let res;
     try {
       res = await fetch(cfg.API_BASE + cfg.LOGIN_PATH, {
