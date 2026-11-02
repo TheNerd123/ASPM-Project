@@ -4,20 +4,26 @@ const userTable = document.querySelector("tbody");
 
 const addUserButton = document.getElementById("add-user-btn");
 const cancelUserButton = document.getElementById("cancel-user-btn");
-const addUserForm = document.getElementById("add-user-form");
+const userForm = document.getElementById("add-user-form");
 
 const nameInput = document.getElementById("new-user-name");
 const emailInput = document.getElementById("new-user-email");
 const roleInput = document.getElementById("new-user-role");
 const formError = document.getElementById("user-form-error");
 
-// Search the table by name or email.
+// These elements already exist inside our form.
+const formTitle = userForm.querySelector("h2");
+const saveButton = userForm.querySelector('button[type="submit"]');
+
+// null means we're adding a user.
+// Otherwise, this holds the row we're editing.
+let editingRow = null;
+
+// Search users by name or email.
 function filterUsers() {
   const searchTerm = searchInput.value.toLowerCase().trim();
 
-  const userRows = userTable.querySelectorAll("tr");
-
-  userRows.forEach(function (row) {
+  userTable.querySelectorAll("tr").forEach(function (row) {
     const name = row.cells[0].textContent.toLowerCase();
     const email = row.cells[1].textContent.toLowerCase();
 
@@ -31,22 +37,56 @@ function filterUsers() {
 
 searchInput.addEventListener("input", filterUsers);
 
-// Show the form when Add User is clicked.
-addUserButton.addEventListener("click", function () {
-  addUserForm.hidden = false;
+// Reset and close the form.
+function closeForm() {
+  userForm.reset();
+  userForm.hidden = true;
   formError.textContent = "";
+  editingRow = null;
+}
+
+// Open the form in Add mode.
+addUserButton.addEventListener("click", function () {
+  editingRow = null;
+
+  userForm.reset();
+  formError.textContent = "";
+
+  formTitle.textContent = "Add New User";
+  saveButton.textContent = "Save User";
+
+  userForm.hidden = false;
   nameInput.focus();
 });
 
-// Hide the form when Cancel is clicked.
-cancelUserButton.addEventListener("click", function () {
-  addUserForm.reset();
-  addUserForm.hidden = true;
+// Close the form when Cancel is clicked.
+cancelUserButton.addEventListener("click", closeForm);
+
+// Handle clicks on Edit buttons.
+userTable.addEventListener("click", function (event) {
+  const editButton = event.target.closest(".edit-user-btn");
+
+  if (!editButton) {
+    return;
+  }
+
+  editingRow = editButton.closest("tr");
+
+  // Read the existing values from the selected row.
+  nameInput.value = editingRow.cells[0].textContent.trim();
+  emailInput.value = editingRow.cells[1].textContent.trim();
+  roleInput.value = editingRow.cells[2].textContent.trim();
+
+  formTitle.textContent = "Edit User";
+  saveButton.textContent = "Save Changes";
   formError.textContent = "";
+
+  userForm.hidden = false;
+  nameInput.focus();
 });
 
-// Add a sample user when the form is submitted.
-addUserForm.addEventListener("submit", function (event) {
+// Save a new user or update an existing one.
+userForm.addEventListener("submit", function (event) {
   event.preventDefault();
 
   const name = nameInput.value.trim();
@@ -58,10 +98,14 @@ addUserForm.addEventListener("submit", function (event) {
     return;
   }
 
-  // Prevent duplicate email addresses.
+  // Check for duplicate emails, excluding the row being edited.
   const existingRows = userTable.querySelectorAll("tr");
 
   for (const row of existingRows) {
+    if (row === editingRow) {
+      continue;
+    }
+
     const existingEmail = row.cells[1].textContent.trim();
 
     if (existingEmail.toLowerCase() === email.toLowerCase()) {
@@ -70,28 +114,33 @@ addUserForm.addEventListener("submit", function (event) {
     }
   }
 
-  // Create a new table row.
-  const newRow = document.createElement("tr");
+  if (editingRow !== null) {
+    // EDIT: Update the existing row.
+    editingRow.cells[0].textContent = name;
+    editingRow.cells[1].textContent = email;
+    editingRow.cells[2].textContent = role;
 
-  const nameCell = newRow.insertCell();
-  nameCell.textContent = name;
+  } else {
+    // ADD: Create a completely new row.
+    const newRow = document.createElement("tr");
 
-  const emailCell = newRow.insertCell();
-  emailCell.textContent = email;
+    newRow.insertCell().textContent = name;
+    newRow.insertCell().textContent = email;
+    newRow.insertCell().textContent = role;
+    newRow.insertCell().textContent = "Active";
 
-  const roleCell = newRow.insertCell();
-  roleCell.textContent = role;
+    // Give the new user an Edit button.
+    const actionsCell = newRow.insertCell();
 
-  const statusCell = newRow.insertCell();
-  statusCell.textContent = "Active";
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "btn edit-user-btn";
+    editButton.textContent = "Edit";
 
-  userTable.appendChild(newRow);
+    actionsCell.appendChild(editButton);
+    userTable.appendChild(newRow);
+  }
 
-  // Clear and close the form.
-  addUserForm.reset();
-  addUserForm.hidden = true;
-  formError.textContent = "";
-
-  // Reapply any active search.
+  closeForm();
   filterUsers();
 });
