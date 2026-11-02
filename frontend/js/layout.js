@@ -2,12 +2,13 @@
 // Each page only needs: <body data-page="..." data-title="..."> and <main id="content">.
 (function () {
   const NAV = [
-    { id: "dashboard",    label: "Dashboard",    href: "index.html" },
-    { id: "applications", label: "Applications", href: "applications.html" },
-    { id: "scanners",     label: "Scanners",     href: "scanners.html" },
-    { id: "scans",        label: "Scans",        href: "scans.html" },
-    { id: "findings",     label: "Findings",     href: "findings.html" },
-    { id: "reports",      label: "Reports",      href: "reports.html" }
+    { id: "dashboard",    label: "Dashboard",       href: "index.html" },
+    { id: "applications", label: "Applications",    href: "applications.html" },
+    { id: "scanners",     label: "Scanners",        href: "scanners.html" },
+    { id: "scans",        label: "Scans",           href: "scans.html" },
+    { id: "findings",     label: "Findings",        href: "findings.html" },
+    { id: "reports",      label: "Reports",         href: "reports.html" },
+    { id: "users",        label: "User Management", href: "users.html" }
   ];
 
   const page = document.body.dataset.page;
