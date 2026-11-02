@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Management | ASPM</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body data-page="users" data-title="User Management">
+
+  <main id="content">
+
+    <!-- Page heading and Add User button -->
+    <div class="page-head">
+      <div>
+        <h1>User Management</h1>
+        <p class="muted">Manage platform users and their roles.</p>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="add-user-btn" class="btn primary">
+          + Add User
+        </button>
+      </div>
+    </div>
+
+    <!-- Add User form (hidden until button is clicked) -->
+    <form id="add-user-form" class="card" hidden>
+      <h2>Add New User</h2>
+      <p class="muted">Add a sample user to the table.</p>
+
+      <div class="user-form-fields">
+
+        <label>
+          Full Name
+          <input
+            type="text"
+            id="new-user-name"
+            placeholder="Enter full name"
+            required
+          >
+        </label>
+
+        <label>
+          Email Address
+          <input
+            type="email"
+            id="new-user-email"
+            placeholder="Enter email address"
+            required
+          >
+        </label>
+
+        <label>
+          Role
+          <select id="new-user-role">
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </label>
+
+      </div>
+
+      <div class="user-form-actions">
+        <button type="button" id="cancel-user-btn" class="btn">
+          Cancel
+        </button>
+
+        <button type="submit" class="btn primary">
+          Save User
+        </button>
+      </div>
+
+      <p id="user-form-error" role="alert"></p>
+    </form>
+
+    <!-- User list -->
+    <div class="card">
+      <h2>Platform Users</h2>
+      <p class="muted">Sample users for interface development.</p>
+
+      <!-- Search field -->
+      <input
+        type="search"
+        id="user-search"
+        placeholder="Search users by name or email..."
+        aria-label="Search users"
+      >
+
+      <!-- Users table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Alice Johnson</td>
+            <td>alice@example.com</td>
+            <td>Admin</td>
+            <td>Active</td>
+            <td>
+                <button type="button" class="btn edit-user-btn">
+                    Edit
+                </button>
+
+                <button type="button" class="btn remove-user-btn">
+                    Remove
+                </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Bob Smith</td>
+            <td>bob@example.com</td>
+            <td>User</td>
+            <td>Active</td>
+            <td>
+                <button type="button" class="btn edit-user-btn">
+                    Edit
+                </button>
+
+                <button type="button" class="btn remove-user-btn">
+                    Remove
+                </button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Charlie Lee</td>
+            <td>charlie@example.com</td>
+            <td>User</td>
+            <td>Inactive</td>
+            <td>
+                <button type="button" class="btn edit-user-btn">
+                    Edit
+                </button>
+
+                <button type="button" class="btn remove-user-btn">
+                    Remove
+                </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/layout.js"></script>
+
+  <!-- User Management functionality -->
+  <script src="js/users.js"></script>
+
+</body>
+</html>
