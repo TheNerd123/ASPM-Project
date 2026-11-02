@@ -9,5 +9,5 @@ window.ASPM_CONFIG = {
 
   // DEVELOPMENT ONLY. Set to true to try the login page before the login API exists
   // (accepts admin@example.com / password123). Set back to false and delete once 2.2 is merged.
-  USE_MOCK_LOGIN: true
+  USE_MOCK_LOGIN: false
 };
