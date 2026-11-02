@@ -3,11 +3,9 @@
 window.ASPM_CONFIG = {
   API_BASE: "http://localhost:8080",
 
-  // Login contract (Story 2.2). Match these to what the backend login endpoint expects.
-  LOGIN_PATH: "/api/login",      // docs/DATABASE_DESIGN.md lists POST /api/login
-  LOGIN_FIELD: "email",          // JSON field name for the "Username/email" box: "email" or "username"
-
-  // DEVELOPMENT ONLY. Set to true to try the login page before the login API exists
-  // (accepts admin@example.com / password123). Set back to false and delete once 2.2 is merged.
-  USE_MOCK_LOGIN: false
+  // Login contract (Story 2.2, AuthController):
+  //   POST /api/login  { email | username, password }
+  //   200 -> { token, user: { id, name, email, role } }      401 -> wrong credentials
+  LOGIN_PATH: "/api/login",
+  LOGIN_FIELD: "email"   // the backend matches this value against the account email or name
 };
