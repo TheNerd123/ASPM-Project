@@ -39,11 +39,26 @@
     return td;
   }
 
+  // AP-78: where the "details" page lives. The id travels in the address: application-details.html?id=...
+  function detailsUrl(app) {
+    return "application-details.html?id=" + encodeURIComponent(app.id);
+  }
+
   function nameCell(app) {
-    const span = document.createElement("span");
-    span.className = "app-name";
-    span.textContent = app.name || "Unnamed application";
-    return cell(span);
+    const a = document.createElement("a");
+    a.className = "app-name";
+    a.href = detailsUrl(app);
+    a.textContent = app.name || "Unnamed application";
+    return cell(a);
+  }
+
+  function actionsCell(app) {
+    const a = document.createElement("a");
+    a.className = "btn btn-sm";
+    a.href = detailsUrl(app);
+    a.textContent = "View details";
+    a.setAttribute("aria-label", "View details for " + (app.name || "application"));
+    return cell(a);
   }
 
   function repoCell(app) {
@@ -85,7 +100,7 @@
     }
     const trs = applications.map(app => {
       const tr = document.createElement("tr");
-      tr.append(nameCell(app), repoCell(app), statusCell(app), createdCell(app), cell()); // last cell: actions, filled in AP-78
+      tr.append(nameCell(app), repoCell(app), statusCell(app), createdCell(app), actionsCell(app));
       return tr;
     });
     rows.replaceChildren(...trs);
