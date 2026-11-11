@@ -56,7 +56,15 @@ This is the initial database and API design. The database implementation and con
 - repository_url
 - owner
 - status
-
+- description
+- environment
+- owner_team
+- default_branch
+- scanning_client_id
+- scanners
+- scan_schedule
+- run_initial_scan
+- created_at
 ### Scanner
 - scanner_id
 - name
