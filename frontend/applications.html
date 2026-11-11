@@ -5,16 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Applications | ASPM</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/applications.css">
 </head>
 <body data-page="applications" data-title="Applications">
   <main id="content">
     <div class="page-head">
       <div>
         <h1>Applications</h1>
-        <p class="muted">Manage the applications that are scanned.</p>
+        <p class="muted" id="app-count">Manage the applications that are scanned.</p>
       </div>
     </div>
-    <div class="card empty">Applications list coming in Sprint 3.</div>
+
+    <div class="card table-card">
+      <div class="table-wrap">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Repository</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="app-rows">
+            <tr><td colspan="5" class="empty">No applications to show yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </main>
 
   <script src="js/config.js"></script>

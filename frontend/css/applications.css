@@ -1,0 +1,13 @@
+/* Applications list page (Story AP-74). Builds on css/style.css. */
+.table-card { padding: 0; overflow: hidden; }
+.table-wrap { overflow-x: auto; position: relative; }
+.app-table { min-width: 640px; }
+.app-table th:first-child, .app-table td:first-child { padding-left: 20px; }
+.app-table th:last-child, .app-table td:last-child { padding-right: 20px; text-align: right; }
+.app-table tbody tr:hover td { background: #fafbfe; }
+.app-table td.empty { text-align: center; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
