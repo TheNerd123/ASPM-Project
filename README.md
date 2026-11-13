@@ -26,6 +26,19 @@ The local database is seeded with a development administrator account so the log
 `APP_SEED_DEFAULT_USER=false` and provide `APP_DEFAULT_PASSWORD` through a secure deployment
 configuration when running outside local development.
 
+## Application deactivation API
+
+Applications are created with status `ACTIVE`. To deactivate an application while keeping its
+historical record, send:
+
+```bash
+curl -X PATCH http://localhost:8080/api/applications/<APPLICATION_ID>/deactivate
+```
+
+The response retains the application ID and returns status `INACTIVE`. Inactive applications remain
+available from `GET /api/applications`, but `POST /api/scans` returns HTTP 409 and does not create a
+new scan for them.
+
 To serve the static frontend, open a second Terminal window and run:  
 python3 -m http.server 5500
 

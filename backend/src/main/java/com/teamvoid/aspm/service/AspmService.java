@@ -45,6 +45,19 @@ public class AspmService {
         return applications.values().stream().sorted(Comparator.comparing(Application::createdAt).reversed()).toList();
     }
 
+    public Application deactivateApplication(UUID applicationId) {
+        Application application = requireApplication(applicationId);
+        Application deactivated = new Application(
+                application.id(),
+                application.name(),
+                application.repositoryUrl(),
+                AssetStatus.INACTIVE,
+                application.createdAt()
+        );
+        applications.put(applicationId, deactivated);
+        return deactivated;
+    }
+
     public Application createApplication(CreateApplicationRequest request) {
         Application application = new Application(UUID.randomUUID(), request.name().trim(), request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
         applications.put(application.id(), application);
@@ -60,7 +73,10 @@ public class AspmService {
     }
 
     public Scan createScan(CreateScanRequest request) {
-        requireApplication(request.applicationId());
+        Application application = requireApplication(request.applicationId());
+        if (application.status() != AssetStatus.ACTIVE) {
+            throw new InactiveApplicationException(application.id());
+        }
         if (!scanners.containsKey(request.scannerId())) {
             throw new ResourceNotFoundException("scanner", request.scannerId());
         }
@@ -78,7 +94,7 @@ public class AspmService {
         return new DashboardSummary(
                 applications.size(),
                 applications.values().stream().filter(a -> a.status() == AssetStatus.ACTIVE).count(),
-                applications.values().stream().filter(a -> a.status() == AssetStatus.ARCHIVED).count(),
+                applications.values().stream().filter(a -> a.status() == AssetStatus.INACTIVE).count(),
                 open,
                 countOpen(Severity.CRITICAL),
                 countOpen(Severity.HIGH),
@@ -91,9 +107,10 @@ public class AspmService {
         return findings.values().stream().filter(f -> f.status() == FindingStatus.OPEN && f.severity() == severity).count();
     }
 
-    private void requireApplication(UUID id) {
+    private Application requireApplication(UUID id) {
         if (!applications.containsKey(id)) {
             throw new ResourceNotFoundException("application", id);
         }
+        return applications.get(id);
     }
 }
