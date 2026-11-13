@@ -55,7 +55,7 @@ This is the initial database and API design. The database implementation and con
 - name
 - repository_url
 - owner
-- status
+- status (`ACTIVE` or `INACTIVE`)
 
 ### Scanner
 - scanner_id
@@ -97,6 +97,7 @@ This is the initial database and API design. The database implementation and con
 - POST /api/login
 - GET /api/applications
 - POST /api/applications
+- PATCH /api/applications/{applicationId}/deactivate
 - GET /api/scanners
 - POST /api/scans
 - GET /api/scans
