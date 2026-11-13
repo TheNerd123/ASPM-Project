@@ -55,8 +55,21 @@ This is the initial database and API design. The database implementation and con
 - name
 - repository_url
 - owner
+### Application
+- application_id
+- name
+- repository_url
+- owner
 - status (`ACTIVE` or `INACTIVE`)
-
+- description
+- environment
+- owner_team
+- default_branch
+- scanning_client_id
+- scanners
+- scan_schedule
+- run_initial_scan
+- created_at
 ### Scanner
 - scanner_id
 - name
