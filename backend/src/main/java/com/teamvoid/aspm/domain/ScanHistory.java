@@ -8,12 +8,12 @@ public class ScanHistory {
 
     private final int SCANS_PER_PAGE = 10;
 
-    private User scanOwner;
+    private Application app;
     private List<Scan> scans;
 
     
-    public ScanHistory(User scanOwner) {
-        this.scanOwner = scanOwner;     //To find ScanHistory by whose scans they are.
+    public ScanHistory(Application app) {
+        this.app = app;
         this.scans = new ArrayList<Scan>();
     }
 
@@ -21,8 +21,8 @@ public class ScanHistory {
         scans.add(scan);
     }
 
-    public User getScanOwner() {
-        return scanOwner;
+    public Application getApp() {
+        return app;
     }
 
     public List<Scan> getScans() {
