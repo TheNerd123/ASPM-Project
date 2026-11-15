@@ -1,4 +1,3 @@
-
 package com.teamvoid.aspm;
 
 import org.junit.jupiter.api.Test;
@@ -63,4 +62,12 @@ class ApiTests {
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.status", is("QUEUED")));
     }
+
+    @Test
+    void cannotCreateApplicationWithEmptyName() throws Exception {
+        mockMvc.perform(post("/api/applications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\",\"repositoryUrl\":\"https://github.com/example/test\"}"))
+                .andExpect(status().isBadRequest());
+        }
 }
