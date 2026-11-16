@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,5 +63,34 @@ class ApiTests {
                         .content("{\"applicationId\":\"" + applicationId + "\",\"scannerId\":\"" + scannerId + "\"}"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.status", is("QUEUED")));
+    }
+
+    @Test
+    void canDeactivateApplicationAndPreventNewScans() throws Exception {
+        String application = mockMvc.perform(post("/api/applications")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Legacy Portal\",\"repositoryUrl\":\"https://github.com/teamvoid/legacy-portal\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status", is("ACTIVE")))
+                .andReturn().getResponse().getContentAsString();
+
+        String applicationId = com.jayway.jsonpath.JsonPath.read(application, "$.id");
+        String scannerId = com.jayway.jsonpath.JsonPath.read(
+                mockMvc.perform(get("/api/scanners")).andReturn().getResponse().getContentAsString(), "$[0].id");
+
+        mockMvc.perform(patch("/api/applications/" + applicationId + "/deactivate"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(applicationId)))
+                .andExpect(jsonPath("$.status", is("INACTIVE")));
+
+        mockMvc.perform(get("/api/applications"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.id == '" + applicationId + "')].status", is(java.util.List.of("INACTIVE"))));
+
+        mockMvc.perform(post("/api/scans")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"applicationId\":\"" + applicationId + "\",\"scannerId\":\"" + scannerId + "\"}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.title", is("Application is inactive")));
     }
 }

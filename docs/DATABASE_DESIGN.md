@@ -55,7 +55,12 @@ This is the initial database and API design. The database implementation and con
 - name
 - repository_url
 - owner
-- status
+### Application
+- application_id
+- name
+- repository_url
+- owner
+- status (`ACTIVE` or `INACTIVE`)
 - description
 - environment
 - owner_team
@@ -105,6 +110,7 @@ This is the initial database and API design. The database implementation and con
 - POST /api/login
 - GET /api/applications
 - POST /api/applications
+- PATCH /api/applications/{applicationId}/deactivate
 - GET /api/scanners
 - POST /api/scans
 - GET /api/scans

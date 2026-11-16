@@ -3,7 +3,7 @@ package com.teamvoid.aspm.api;
 public record DashboardSummary(
         long totalApplications,
         long activeApplications,
-        long archivedApplications,
+        long inactiveApplications,
         long openFindings,
         long criticalFindings,
         long highFindings,
