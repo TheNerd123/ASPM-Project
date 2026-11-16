@@ -8,6 +8,8 @@ import com.teamvoid.aspm.service.AspmService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -35,6 +38,11 @@ public class AspmController {
     @ResponseStatus(HttpStatus.CREATED)
     public Application createApplication(@Valid @RequestBody CreateApplicationRequest request) {
         return service.createApplication(request);
+    }
+
+    @PatchMapping({"/applications/{applicationId}/deactivate", "/v1/applications/{applicationId}/deactivate"})
+    public Application deactivateApplication(@PathVariable UUID applicationId) {
+        return service.deactivateApplication(applicationId);
     }
 
     @GetMapping({"/scanners", "/v1/scanners"})

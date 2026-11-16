@@ -60,6 +60,19 @@ public class AspmService {
         return applicationRepository.findAll().stream().map(this::toDomain).sorted(Comparator.comparing(Application::createdAt).reversed()).toList();
     }
 
+    public Application deactivateApplication(UUID applicationId) {
+        Application application = requireApplication(applicationId);
+        Application deactivated = new Application(
+                application.id(),
+                application.name(),
+                application.repositoryUrl(),
+                AssetStatus.INACTIVE,
+                application.createdAt()
+        );
+        applications.put(applicationId, deactivated);
+        return deactivated;
+    }
+
     public Application createApplication(CreateApplicationRequest request) {
         ApplicationEntity entity = new ApplicationEntity(UUID.randomUUID(), request.name().trim(), request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
         ApplicationEntity savedEntity = applicationRepository.save(entity);
@@ -79,7 +92,10 @@ public class AspmService {
     }
 
     public Scan createScan(CreateScanRequest request) {
-        requireApplication(request.applicationId());
+        Application application = requireApplication(request.applicationId());
+        if (application.status() != AssetStatus.ACTIVE) {
+            throw new InactiveApplicationException(application.id());
+        }
         if (!scanners.containsKey(request.scannerId())) {
             throw new ResourceNotFoundException("scanner", request.scannerId());
         }
@@ -111,9 +127,10 @@ public class AspmService {
         return findings.values().stream().filter(f -> f.status() == FindingStatus.OPEN && f.severity() == severity).count();
     }
 
-    private void requireApplication(UUID id) {
-        if (!applicationRepository.existsById(id)) {
+    private Application requireApplication(UUID id) {
+        if (!applications.containsKey(id)) {
             throw new ResourceNotFoundException("application", id);
         }
+        return applications.get(id);
     }
 }
