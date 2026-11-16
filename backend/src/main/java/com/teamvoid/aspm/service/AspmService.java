@@ -1,6 +1,7 @@
 package com.teamvoid.aspm.service;
 
 import com.teamvoid.aspm.api.CreateApplicationRequest;
+import com.teamvoid.aspm.api.UpdateApplicationRequest;
 import com.teamvoid.aspm.api.CreateScanRequest;
 import com.teamvoid.aspm.api.DashboardSummary;
 import com.teamvoid.aspm.domain.Application;
@@ -75,6 +76,17 @@ public class AspmService {
 
     public Application createApplication(CreateApplicationRequest request) {
         ApplicationEntity entity = new ApplicationEntity(UUID.randomUUID(), request.name().trim(), request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
+        ApplicationEntity savedEntity = applicationRepository.save(entity);
+        return toDomain(savedEntity);
+    }
+
+    public Application updateApplication(UUID applicationId, UpdateApplicationRequest request) {
+        ApplicationEntity entity = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("application", applicationId));
+
+        entity.setName(request.name().trim());
+        entity.setRepositoryUrl(request.repositoryUrl());
+
         ApplicationEntity savedEntity = applicationRepository.save(entity);
         return toDomain(savedEntity);
     }
