@@ -1,4 +1,3 @@
-
 package com.teamvoid.aspm;
 
 import org.junit.jupiter.api.Test;
