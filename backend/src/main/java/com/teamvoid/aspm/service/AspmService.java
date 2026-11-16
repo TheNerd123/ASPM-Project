@@ -11,9 +11,6 @@ import com.teamvoid.aspm.domain.Scan;
 import com.teamvoid.aspm.domain.ScanStatus;
 import com.teamvoid.aspm.domain.Scanner;
 import com.teamvoid.aspm.domain.Severity;
-import com.teamvoid.aspm.persistence.ApplicationEntity;
-import com.teamvoid.aspm.repository.ApplicationRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -26,28 +23,16 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 public class AspmService {
 
-    private final ApplicationRepository applicationRepository;
+    private final ConcurrentMap<UUID, Application> applications = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Scanner> scanners = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Scan> scans = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Finding> findings = new ConcurrentHashMap<>();
 
-    public AspmService(ApplicationRepository applicationRepository) {
-        this.applicationRepository = applicationRepository;
+    public AspmService() {
         Scanner semgrep = new Scanner(UUID.randomUUID(), "Semgrep", "SAST", true);
         scanners.put(semgrep.id(), semgrep);
 
-        //Temporary solution, may need to be improved later on
-        Application payments = applicationRepository.findAll().stream()
-            .filter(entity -> "Payments API".equals(entity.getName()) && "https://github.com/teamvoid/payments-api".equals(entity.getRepositoryUrl()))
-            .findFirst()
-            .map(this::toDomain)
-            .orElseGet(() -> createApplication(
-                new CreateApplicationRequest(
-                    "Payments API",
-                    "https://github.com/teamvoid/payments-api"
-                )
-        ));
-        
+        Application payments = createApplication(new CreateApplicationRequest("Payments API", "https://github.com/teamvoid/payments-api"));
         Scan scan = new Scan(UUID.randomUUID(), payments.id(), semgrep.id(), ScanStatus.COMPLETED, 18, Instant.now());
         scans.put(scan.id(), scan);
         Finding credentialFinding = new Finding(UUID.randomUUID(), payments.id(), Severity.CRITICAL, "Hard-coded credential", FindingStatus.OPEN, Instant.now());
@@ -57,7 +42,7 @@ public class AspmService {
     }
 
     public List<Application> applications() {
-        return applicationRepository.findAll().stream().map(this::toDomain).sorted(Comparator.comparing(Application::createdAt).reversed()).toList();
+        return applications.values().stream().sorted(Comparator.comparing(Application::createdAt).reversed()).toList();
     }
 
     public Application deactivateApplication(UUID applicationId) {
@@ -74,13 +59,9 @@ public class AspmService {
     }
 
     public Application createApplication(CreateApplicationRequest request) {
-        ApplicationEntity entity = new ApplicationEntity(UUID.randomUUID(), request.name().trim(), request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
-        ApplicationEntity savedEntity = applicationRepository.save(entity);
-        return toDomain(savedEntity);
-    }
-
-    private Application toDomain(ApplicationEntity entity) {
-        return new Application(entity.getId(), entity.getName(), entity.getRepositoryUrl(), entity.getStatus(),entity.getCreatedAt());
+        Application application = new Application(UUID.randomUUID(), request.name().trim(), request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
+        applications.put(application.id(), application);
+        return application;
     }
 
     public List<Scanner> scanners() {
@@ -109,12 +90,11 @@ public class AspmService {
     }
 
     public DashboardSummary dashboardSummary() {
-        List<Application> allApplications = applications();
         long open = findings.values().stream().filter(f -> f.status() == FindingStatus.OPEN).count();
         return new DashboardSummary(
-                allApplications.size(),
-                allApplications.stream().filter(a -> a.status() == AssetStatus.ACTIVE).count(),
-                allApplications.stream().filter(a -> a.status() == AssetStatus.ARCHIVED).count(),
+                applications.size(),
+                applications.values().stream().filter(a -> a.status() == AssetStatus.ACTIVE).count(),
+                applications.values().stream().filter(a -> a.status() == AssetStatus.INACTIVE).count(),
                 open,
                 countOpen(Severity.CRITICAL),
                 countOpen(Severity.HIGH),
