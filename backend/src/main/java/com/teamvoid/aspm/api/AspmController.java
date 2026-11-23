@@ -39,6 +39,7 @@ public class AspmController {
     @ResponseStatus(HttpStatus.CREATED)
     public Application createApplication(@Valid @RequestBody CreateApplicationRequest request) {
         return service.createApplication(request);
+    }
 
     @PutMapping({"/applications/{applicationId}", "/v1/applications/{applicationId}"})
     public Application updateApplication(

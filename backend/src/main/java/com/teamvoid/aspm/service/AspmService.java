@@ -62,16 +62,14 @@ public class AspmService {
     }
 
     public Application deactivateApplication(UUID applicationId) {
-        Application application = requireApplication(applicationId);
-        Application deactivated = new Application(
-                application.id(),
-                application.name(),
-                application.repositoryUrl(),
-                AssetStatus.INACTIVE,
-                application.createdAt()
-        );
-        applications.put(applicationId, deactivated);
-        return deactivated;
+        ApplicationEntity entity = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("application", applicationId));
+
+        entity.setStatus(AssetStatus.INACTIVE);
+
+        ApplicationEntity savedEntity = applicationRepository.save(entity);
+
+        return toDomain(savedEntity);
     }
 
     public Application createApplication(CreateApplicationRequest request) {
@@ -126,7 +124,7 @@ public class AspmService {
         return new DashboardSummary(
                 allApplications.size(),
                 allApplications.stream().filter(a -> a.status() == AssetStatus.ACTIVE).count(),
-                allApplications.stream().filter(a -> a.status() == AssetStatus.ARCHIVED).count(),
+                allApplications.stream().filter(a -> a.status() == AssetStatus.INACTIVE).count(),
                 open,
                 countOpen(Severity.CRITICAL),
                 countOpen(Severity.HIGH),
@@ -140,9 +138,8 @@ public class AspmService {
     }
 
     private Application requireApplication(UUID id) {
-        if (!applications.containsKey(id)) {
-            throw new ResourceNotFoundException("application", id);
-        }
-        return applications.get(id);
+        return applicationRepository.findById(id)
+                .map(this::toDomain)
+                .orElseThrow(() -> new ResourceNotFoundException("application", id));
     }
 }
