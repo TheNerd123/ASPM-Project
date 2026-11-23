@@ -30,50 +30,51 @@ public class AspmController {
         this.service = service;
     }
 
-    @GetMapping({"/applications", "/v1/applications"})
+    @GetMapping({ "/applications", "/v1/applications" })
     public List<Application> applications() {
         return service.applications();
     }
 
-    @PostMapping({"/applications", "/v1/applications"})
+    @PostMapping({ "/applications", "/v1/applications" })
     @ResponseStatus(HttpStatus.CREATED)
     public Application createApplication(@Valid @RequestBody CreateApplicationRequest request) {
         return service.createApplication(request);
+    }
 
-    @PutMapping({"/applications/{applicationId}", "/v1/applications/{applicationId}"})
+    @PutMapping({ "/applications/{applicationId}", "/v1/applications/{applicationId}" })
     public Application updateApplication(
-	    @PathVariable UUID applicationId,
-	    @Valid @RequestBody UpdateApplicationRequest request) {
+            @PathVariable UUID applicationId,
+            @Valid @RequestBody UpdateApplicationRequest request) {
         return service.updateApplication(applicationId, request);
     }
 
-    @PatchMapping({"/applications/{applicationId}/deactivate", "/v1/applications/{applicationId}/deactivate"})
+    @PatchMapping({ "/applications/{applicationId}/deactivate", "/v1/applications/{applicationId}/deactivate" })
     public Application deactivateApplication(@PathVariable UUID applicationId) {
         return service.deactivateApplication(applicationId);
     }
 
-    @GetMapping({"/scanners", "/v1/scanners"})
+    @GetMapping({ "/scanners", "/v1/scanners" })
     public List<Scanner> scanners() {
         return service.scanners();
     }
 
-    @GetMapping({"/scans", "/v1/scans"})
+    @GetMapping({ "/scans", "/v1/scans" })
     public List<Scan> scans() {
         return service.scans();
     }
 
-    @PostMapping({"/scans", "/v1/scans"})
+    @PostMapping({ "/scans", "/v1/scans" })
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Scan createScan(@Valid @RequestBody CreateScanRequest request) {
         return service.createScan(request);
     }
 
-    @GetMapping({"/findings", "/v1/findings"})
+    @GetMapping({ "/findings", "/v1/findings" })
     public List<Finding> findings() {
         return service.findings();
     }
 
-    @GetMapping({"/dashboard/summary", "/v1/dashboard/summary"})
+    @GetMapping({ "/dashboard/summary", "/v1/dashboard/summary" })
     public DashboardSummary dashboardSummary() {
         return service.dashboardSummary();
     }
