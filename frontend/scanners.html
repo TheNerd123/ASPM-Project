@@ -5,20 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scanners | ASPM</title>
   <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/scanners.css">
 </head>
 <body data-page="scanners" data-title="Scanner Management">
   <main id="content">
     <div class="page-head">
       <div>
         <h1>Scanner Management</h1>
-        <p class="muted">Manage Semgrep and the scanning clients.</p>
+        <p class="muted" id="scanner-count">View and control the scanners available to ASPM.</p>
       </div>
     </div>
-    <div class="card empty">Scanners and clients coming in Sprint 4.</div>
+    <p class="toggle-error" id="scanner-error" hidden></p>
+    <div class="card table-card">
+  <div class="table-wrap">
+    <table class="scanner-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th><span class="sr-only">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody id="scanner-rows">
+        <tr><td colspan="4" class="empty">No scanners to show yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
   </main>
 
   <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/layout.js"></script>
+  <script src="js/scanners.js"></script>
 </body>
 </html>
