@@ -13,7 +13,9 @@ import com.teamvoid.aspm.domain.ScanStatus;
 import com.teamvoid.aspm.domain.Scanner;
 import com.teamvoid.aspm.domain.Severity;
 import com.teamvoid.aspm.persistence.ApplicationEntity;
+import com.teamvoid.aspm.persistence.ScannerEntity;
 import com.teamvoid.aspm.repository.ApplicationRepository;
+import com.teamvoid.aspm.repository.ScannerRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -28,14 +30,25 @@ import java.util.concurrent.ConcurrentMap;
 public class AspmService {
 
     private final ApplicationRepository applicationRepository;
-    private final ConcurrentMap<UUID, Scanner> scanners = new ConcurrentHashMap<>();
+    private final ScannerRepository scannerRepository;
     private final ConcurrentMap<UUID, Scan> scans = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Finding> findings = new ConcurrentHashMap<>();
 
-    public AspmService(ApplicationRepository applicationRepository) {
+    public AspmService(ApplicationRepository applicationRepository, ScannerRepository scannerRepository) {
         this.applicationRepository = applicationRepository;
-        Scanner semgrep = new Scanner(UUID.randomUUID(), "Semgrep", "SAST", true);
-        scanners.put(semgrep.id(), semgrep);
+        this.scannerRepository = scannerRepository;
+
+        ScannerEntity semgrep = scannerRepository.findByName("Semgrep")
+            .orElseGet(() -> scannerRepository.save(
+                    new ScannerEntity(
+                        UUID.randomUUID(),
+                        "Semgrep",
+                        "SAST",
+                        true,
+                        "{\"config\":\"auto\"}",
+                        Instant.now()
+                    )
+            ));
 
         // Temporary solution, may need to be improved later on
         Application payments = applicationRepository.findAll().stream()
@@ -48,7 +61,7 @@ public class AspmService {
                                 "Payments API",
                                 "https://github.com/teamvoid/payments-api")));
 
-        Scan scan = new Scan(UUID.randomUUID(), payments.id(), semgrep.id(), ScanStatus.COMPLETED, 18, Instant.now());
+        Scan scan = new Scan(UUID.randomUUID(), payments.id(), semgrep.getId(), ScanStatus.COMPLETED, 18, Instant.now());
         scans.put(scan.id(), scan);
         Finding credentialFinding = new Finding(UUID.randomUUID(), payments.id(), Severity.CRITICAL,
                 "Hard-coded credential", FindingStatus.OPEN, Instant.now());
@@ -95,7 +108,16 @@ public class AspmService {
     }
 
     public List<Scanner> scanners() {
-        return scanners.values().stream().sorted(Comparator.comparing(Scanner::name)).toList();
+        return scannerRepository.findAll().stream().map(this::toDomain).sorted(Comparator.comparing(Scanner::name)).toList();
+    }
+
+    private Scanner toDomain(ScannerEntity entity) {
+        return new Scanner(
+            entity.getId(),
+            entity.getName(),
+            entity.getType(),
+            entity.isEnabled()
+        );
     }
 
     public List<Scan> scans() {
@@ -107,9 +129,11 @@ public class AspmService {
         if (application.status() != AssetStatus.ACTIVE) {
             throw new InactiveApplicationException(application.id());
         }
-        if (!scanners.containsKey(request.scannerId())) {
+
+        if (!scannerRepository.existsById(request.scannerId())) {
             throw new ResourceNotFoundException("scanner", request.scannerId());
         }
+
         Scan scan = new Scan(UUID.randomUUID(), request.applicationId(), request.scannerId(), ScanStatus.QUEUED, 0,
                 Instant.now());
         scans.put(scan.id(), scan);
