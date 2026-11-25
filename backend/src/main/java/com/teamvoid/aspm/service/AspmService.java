@@ -37,43 +37,43 @@ public class AspmService {
         Scanner semgrep = new Scanner(UUID.randomUUID(), "Semgrep", "SAST", true);
         scanners.put(semgrep.id(), semgrep);
 
-        //Temporary solution, may need to be improved later on
+        // Temporary solution, may need to be improved later on
         Application payments = applicationRepository.findAll().stream()
-            .filter(entity -> "Payments API".equals(entity.getName()) && "https://github.com/teamvoid/payments-api".equals(entity.getRepositoryUrl()))
-            .findFirst()
-            .map(this::toDomain)
-            .orElseGet(() -> createApplication(
-                new CreateApplicationRequest(
-                    "Payments API",
-                    "https://github.com/teamvoid/payments-api"
-                )
-        ));
-        
+                .filter(entity -> "Payments API".equals(entity.getName())
+                        && "https://github.com/teamvoid/payments-api".equals(entity.getRepositoryUrl()))
+                .findFirst()
+                .map(this::toDomain)
+                .orElseGet(() -> createApplication(
+                        new CreateApplicationRequest(
+                                "Payments API",
+                                "https://github.com/teamvoid/payments-api")));
+
         Scan scan = new Scan(UUID.randomUUID(), payments.id(), semgrep.id(), ScanStatus.COMPLETED, 18, Instant.now());
         scans.put(scan.id(), scan);
-        Finding credentialFinding = new Finding(UUID.randomUUID(), payments.id(), Severity.CRITICAL, "Hard-coded credential", FindingStatus.OPEN, Instant.now());
-        Finding dependencyFinding = new Finding(UUID.randomUUID(), payments.id(), Severity.HIGH, "Unsafe dependency version", FindingStatus.OPEN, Instant.now());
+        Finding credentialFinding = new Finding(UUID.randomUUID(), payments.id(), Severity.CRITICAL,
+                "Hard-coded credential", FindingStatus.OPEN, Instant.now());
+        Finding dependencyFinding = new Finding(UUID.randomUUID(), payments.id(), Severity.HIGH,
+                "Unsafe dependency version", FindingStatus.OPEN, Instant.now());
         findings.put(credentialFinding.id(), credentialFinding);
         findings.put(dependencyFinding.id(), dependencyFinding);
     }
 
     public List<Application> applications() {
-        return applicationRepository.findAll().stream().map(this::toDomain).sorted(Comparator.comparing(Application::createdAt).reversed()).toList();
+        return applicationRepository.findAll().stream().map(this::toDomain)
+                .sorted(Comparator.comparing(Application::createdAt).reversed()).toList();
     }
 
     public Application deactivateApplication(UUID applicationId) {
         ApplicationEntity entity = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new ResourceNotFoundException("application", applicationId));
-
         entity.setStatus(AssetStatus.INACTIVE);
-
         ApplicationEntity savedEntity = applicationRepository.save(entity);
-
         return toDomain(savedEntity);
     }
 
     public Application createApplication(CreateApplicationRequest request) {
-        ApplicationEntity entity = new ApplicationEntity(UUID.randomUUID(), request.name().trim(), request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
+        ApplicationEntity entity = new ApplicationEntity(UUID.randomUUID(), request.name().trim(),
+                request.repositoryUrl(), AssetStatus.ACTIVE, Instant.now());
         ApplicationEntity savedEntity = applicationRepository.save(entity);
         return toDomain(savedEntity);
     }
@@ -90,7 +90,8 @@ public class AspmService {
     }
 
     private Application toDomain(ApplicationEntity entity) {
-        return new Application(entity.getId(), entity.getName(), entity.getRepositoryUrl(), entity.getStatus(),entity.getCreatedAt());
+        return new Application(entity.getId(), entity.getName(), entity.getRepositoryUrl(), entity.getStatus(),
+                entity.getCreatedAt());
     }
 
     public List<Scanner> scanners() {
@@ -109,7 +110,8 @@ public class AspmService {
         if (!scanners.containsKey(request.scannerId())) {
             throw new ResourceNotFoundException("scanner", request.scannerId());
         }
-        Scan scan = new Scan(UUID.randomUUID(), request.applicationId(), request.scannerId(), ScanStatus.QUEUED, 0, Instant.now());
+        Scan scan = new Scan(UUID.randomUUID(), request.applicationId(), request.scannerId(), ScanStatus.QUEUED, 0,
+                Instant.now());
         scans.put(scan.id(), scan);
         return scan;
     }
@@ -129,17 +131,17 @@ public class AspmService {
                 countOpen(Severity.CRITICAL),
                 countOpen(Severity.HIGH),
                 countOpen(Severity.MEDIUM),
-                countOpen(Severity.LOW)
-        );
+                countOpen(Severity.LOW));
     }
 
     private long countOpen(Severity severity) {
-        return findings.values().stream().filter(f -> f.status() == FindingStatus.OPEN && f.severity() == severity).count();
+        return findings.values().stream().filter(f -> f.status() == FindingStatus.OPEN && f.severity() == severity)
+                .count();
     }
 
     private Application requireApplication(UUID id) {
-        return applicationRepository.findById(id)
-                .map(this::toDomain)
+        ApplicationEntity entity = applicationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("application", id));
+        return toDomain(entity);
     }
 }
