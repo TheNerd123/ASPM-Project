@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import jakarta.persistence.EntityManager;
 
@@ -115,5 +116,54 @@ class ScannerRepositoryTest {
         ScannerEntity reenabled = scannerRepository.findById(id).orElseThrow();
 
         assertTrue(reenabled.isEnabled());
+    }
+
+    @Test
+    void cannotCreateScannersWithDuplicateNames() {
+        ScannerEntity first = new ScannerEntity(
+                UUID.randomUUID(),
+                "Duplicate Scanner",
+                "SAST",
+                true,
+                "{\"config\":\"auto\"}",
+                Instant.now()
+        );
+
+        ScannerEntity second = new ScannerEntity(
+                UUID.randomUUID(),
+                "Duplicate Scanner",
+                "SAST",
+                true,
+                "{\"config\":\"auto\"}",
+                Instant.now()
+        );
+
+        scannerRepository.saveAndFlush(first);
+
+        assertThrows(DataIntegrityViolationException.class, () -> scannerRepository.saveAndFlush(second));
+    }
+
+    @Test
+    void canFindScannerByName() {
+        UUID id = UUID.randomUUID();
+
+        ScannerEntity scanner = new ScannerEntity(
+                id,
+                "Lookup Test Scanner",
+                "SAST",
+                true,
+                "{\"config\":\"auto\"}",
+                Instant.now()
+        );
+
+        scannerRepository.saveAndFlush(scanner);
+        entityManager.clear();
+
+        ScannerEntity retrieved = scannerRepository.findByName("Lookup Test Scanner").orElseThrow();
+
+        assertEquals(id, retrieved.getId());
+        assertEquals("Lookup Test Scanner", retrieved.getName());
+
+        assertTrue(scannerRepository.findByName("Nonexistent Scanner").isEmpty());
     }
 }
