@@ -59,6 +59,18 @@
     return cell(statusBadge(s.enabled));
   }
 
+  function controlsCell(s) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn toggle-scanner";
+    btn.textContent = s.enabled ? "Disable" : "Enable";
+    btn.addEventListener("click", () => {
+      s.enabled = !s.enabled;
+      render();
+    });
+    return cell(btn);
+  }
+
   function render() {
     if (scanners.length === 0) {
       showRow("No scanners registered yet.");
@@ -66,7 +78,7 @@
     }
     const trs = scanners.map(s => {
       const tr = document.createElement("tr");
-      tr.append(nameCell(s), typeCell(s), statusCell(s), cell()); // last cell: controls, added in AP-154
+      tr.append(nameCell(s), typeCell(s), statusCell(s), controlsCell(s));
       return tr;
     });
     rows.replaceChildren(...trs);
