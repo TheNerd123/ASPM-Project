@@ -5,6 +5,7 @@
     { id: "dashboard",    label: "Dashboard",    href: "index.html" },
     { id: "applications", label: "Applications", href: "applications.html" },
     { id: "scanners",     label: "Scanners",     href: "scanners.html" },
+    { id: "clients", label: "Client Management", href: "client-management.html" },
     { id: "scans",        label: "Scans",        href: "scans.html" },
     { id: "findings",     label: "Findings",     href: "findings.html" },
     { id: "reports",      label: "Reports",      href: "reports.html" },
