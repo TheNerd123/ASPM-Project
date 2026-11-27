@@ -79,8 +79,53 @@
       cell(row, client.agentVersion);
       cell(row, client.lastHeartbeat);
 
-      // Details and deactivation belong to AP-162.
-      cell(row, "—");
+    // AP-162: Client details and deactivation controls.
+const actionsCell = document.createElement("td");
+
+const detailsButton = document.createElement("button");
+detailsButton.type = "button";
+detailsButton.textContent = "View Details";
+detailsButton.className = "btn btn-secondary";
+
+detailsButton.addEventListener("click", () => {
+  const details = [
+    `Client Name: ${client.name ?? "N/A"}`,
+    `Client ID: ${client.id ?? "N/A"}`,
+    `Operating System: ${client.operatingSystem ?? "N/A"}`,
+    `Status: ${client.status ?? "Unknown"}`,
+    `Scanner: ${client.scanner ?? "N/A"}`,
+    `Jobs / Capacity: ${client.jobsCapacity ?? "N/A"}`,
+    `Agent Version: ${client.agentVersion ?? "N/A"}`,
+    `Last Heartbeat: ${client.lastHeartbeat ?? "N/A"}`
+  ];
+
+  window.alert(details.join("\n"));
+});
+
+actionsCell.appendChild(detailsButton);
+
+// AP-162: Client deactivation control.
+const deactivateButton = document.createElement("button");
+deactivateButton.type = "button";
+deactivateButton.textContent = "Deactivate";
+deactivateButton.className = "btn btn-secondary";
+deactivateButton.style.marginLeft = "8px";
+
+deactivateButton.addEventListener("click", () => {
+  const confirmed = window.confirm(
+    `Are you sure you want to deactivate ${client.name ?? "this client"}?`
+  );
+
+  if (!confirmed) return;
+
+  window.alert(
+    "Client deactivation is not available yet. " +
+    "No changes have been made. Backend integration is pending."
+  );
+});
+
+actionsCell.appendChild(deactivateButton);
+row.appendChild(actionsCell);
 
       rows.appendChild(row);
     });
