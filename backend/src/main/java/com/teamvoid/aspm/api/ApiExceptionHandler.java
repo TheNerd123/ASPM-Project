@@ -3,6 +3,7 @@ package com.teamvoid.aspm.api;
 import com.teamvoid.aspm.service.ResourceNotFoundException;
 import com.teamvoid.aspm.service.AuthenticationService;
 import com.teamvoid.aspm.service.InactiveApplicationException;
+import com.teamvoid.aspm.service.SemgrepScanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,16 @@ public class ApiExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail badRequest(IllegalArgumentException exception) {
         return problem(HttpStatus.BAD_REQUEST, "Invalid request", exception.getMessage());
+    }
+
+    @ExceptionHandler(SemgrepScanService.InvalidProjectPathException.class)
+    public ProblemDetail invalidProjectPath(SemgrepScanService.InvalidProjectPathException exception) {
+        return problem(HttpStatus.BAD_REQUEST, "Invalid project path", exception.getMessage());
+    }
+
+    @ExceptionHandler(SemgrepScanService.SemgrepScanException.class)
+    public ProblemDetail semgrepFailure(SemgrepScanService.SemgrepScanException exception) {
+        return problem(HttpStatus.BAD_GATEWAY, "Semgrep scan failed", exception.getMessage());
     }
 
     private ProblemDetail problem(HttpStatus status, String title, String detail) {

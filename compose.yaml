@@ -20,6 +20,9 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: localdev
       DB_DDL_AUTO: update
+    volumes:
+      # Makes the checked-out project available to Semgrep inside the backend container.
+      - ./:/workspace/project:ro
     depends_on:
       - db
 
